@@ -39,3 +39,28 @@ from gold.dim_customers;
 
 												/* Product Intelligence */
 
+--(6). The procurement team wants a cost overview. Pull product name and cost for all products.
+select
+product_name,cost
+from gold.dim_products;
+
+
+--(7). A product manager asks — "which product lines do we operate in?" Write a query to retrieve just the product line and category columns.
+select
+product_line,category
+from gold.dim_products;
+
+--(8). The maintenance team needs a checklist. Retrieve product name, subcategory, and maintenance status for all products.
+select
+product_name, subcategory, maintenance
+from gold.dim_products;
+
+--(9). Finance wants to model a price increase scenario. Select product name and cost, and show a second column with cost increased by 15%, aliased as projected_cost.
+select
+product_name, cost * 1.15 AS projected_cost
+from gold.dim_products;
+
+--(10). The catalog team wants to audit product identifiers. Retrieve product number, product name, and category in a clean readable format.
+select
+product_number, product_name, category
+from gold.dim_products;
