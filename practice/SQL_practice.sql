@@ -64,3 +64,37 @@ from gold.dim_products;
 select
 product_number, product_name, category
 from gold.dim_products;
+
+
+
+
+
+
+/* Core skill: retrieving and shaping data for business consumption */
+
+
+-- (1). The finance team needs a clean sales summary report. 
+-- Each row should show the order reference, who the customer is as a single field, the product they bought, and the revenue generated
+--  — with all column names readable by a non-technical stakeholder.
+
+select 
+	fs.order_number As Order_Reference,
+	concat(dc.first_name,' ',dc.last_name) as Customer_Name,
+	dp.product_name as Product_Name,
+	fs.sales_amount
+from gold.fact_sales as fs
+join gold.dim_customers as dc
+	on fs.customer_key = dc.customer_key
+join gold.dim_products as dp
+	on fs.product_key = dp.product_key
+
+
+--(2). Leadership wants a product profitability snapshot. 
+-- For every product, show the product name, its current cost, and what the revenue would look like at both a 20% and 40% margin — as separate columns.
+
+select
+	dp.product_name,
+	dp.cost,
+	Round(dp.cost / 0.8,2) as Revenue_At_20_Margin,
+	Round(dp.cost / 0.6,2 ) as Revenue_At_40_Margin
+from gold.dim_products as dp
