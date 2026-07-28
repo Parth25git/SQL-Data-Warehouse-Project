@@ -77,27 +77,27 @@ from gold.dim_products;
 -- Each row should show the order reference, who the customer is as a single field, the product they bought, and the revenue generated
 --  — with all column names readable by a non-technical stakeholder.
 
-select 
-	fs.order_number As Order_Reference,
-	concat(dc.first_name,' ',dc.last_name) as Customer_Name,
-	dp.product_name as Product_Name,
-	fs.sales_amount
-from gold.fact_sales as fs
-join gold.dim_customers as dc
-	on fs.customer_key = dc.customer_key
-join gold.dim_products as dp
-	on fs.product_key = dp.product_key
+	select 
+		fs.order_number As Order_Reference,
+		concat(dc.first_name,' ',dc.last_name) as Customer_Name,
+		dp.product_name as Product_Name,
+		fs.sales_amount
+	from gold.fact_sales as fs
+	join gold.dim_customers as dc
+		on fs.customer_key = dc.customer_key
+	join gold.dim_products as dp
+		on fs.product_key = dp.product_key
 
 
 --(2). Leadership wants a product profitability snapshot. 
 -- For every product, show the product name, its current cost, and what the revenue would look like at both a 20% and 40% margin — as separate columns.
 
-select
-	dp.product_name,
-	dp.cost,
-	Round(dp.cost / 0.8,2) as Revenue_At_20_Margin,
-	Round(dp.cost / 0.6,2 ) as Revenue_At_40_Margin
-from gold.dim_products as dp
+	select
+		dp.product_name,
+		dp.cost,
+		Round(dp.cost / 0.8,2) as Revenue_At_20_Margin,
+		Round(dp.cost / 0.6,2 ) as Revenue_At_40_Margin
+	from gold.dim_products as dp
 
 
 
@@ -105,26 +105,26 @@ from gold.dim_products as dp
 -- Show order number, the stored price, the stored quantity, and what the revenue should have been if price × quantity were used.
 
 
--- (i). Flag indicator whether they match or not?
-select
-	order_number,
-	price AS Stored_Price,
-	quantity AS Stored_Quantity,
-	(price * quantity) AS Expected_revenue,
-	sales_amount AS stored_revenue,
-	CASE
-		when sales_amount = price * quantity then 'Match'
-		else 'Mismatch'
-	END AS Revenue_Status
-from gold.fact_sales;
+	-- (i). Flag indicator whether they match or not?
+	select
+		order_number,
+		price AS Stored_Price,
+		quantity AS Stored_Quantity,
+		(price * quantity) AS Expected_revenue,
+		sales_amount AS stored_revenue,
+		CASE
+			when sales_amount = price * quantity then 'Match'
+			else 'Mismatch'
+		END AS Revenue_Status
+	from gold.fact_sales;
 
 
---(ii). Or, if the goal is to show only problematic orders, add a filter:
-SELECT
-    order_number,
-    price,
-    quantity,
-    sales_amount,
-    price * quantity AS Expected_Revenue
-FROM gold.fact_sales
-WHERE sales_amount <> price * quantity;
+	--(ii). Or, if the goal is to show only problematic orders, add a filter:
+	SELECT
+		order_number,
+		price,
+		quantity,
+		sales_amount,
+		price * quantity AS Expected_Revenue
+	FROM gold.fact_sales
+	WHERE sales_amount <> price * quantity;
