@@ -98,3 +98,33 @@ select
 	Round(dp.cost / 0.8,2) as Revenue_At_20_Margin,
 	Round(dp.cost / 0.6,2 ) as Revenue_At_40_Margin
 from gold.dim_products as dp
+
+
+
+-- (3). The operations team wants to flag orders where the shipped amount does not match the expected price. 
+-- Show order number, the stored price, the stored quantity, and what the revenue should have been if price × quantity were used.
+
+
+-- (i). Flag indicator whether they match or not?
+select
+	order_number,
+	price AS Stored_Price,
+	quantity AS Stored_Quantity,
+	(price * quantity) AS Expected_revenue,
+	sales_amount AS stored_revenue,
+	CASE
+		when sales_amount = price * quantity then 'Match'
+		else 'Mismatch'
+	END AS Revenue_Status
+from gold.fact_sales;
+
+
+--(ii). Or, if the goal is to show only problematic orders, add a filter:
+SELECT
+    order_number,
+    price,
+    quantity,
+    sales_amount,
+    price * quantity AS Expected_Revenue
+FROM gold.fact_sales
+WHERE sales_amount <> price * quantity;
