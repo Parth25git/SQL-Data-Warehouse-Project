@@ -70,7 +70,7 @@ from gold.dim_products;
 
 
 
-/* Core skill: retrieving and shaping data for business consumption */
+						/* Core skill: retrieving and shaping data for business consumption */
 
 
 -- (1). The finance team needs a clean sales summary report. 
@@ -128,3 +128,16 @@ from gold.dim_products;
 		price * quantity AS Expected_Revenue
 	FROM gold.fact_sales
 	WHERE sales_amount <> price * quantity;
+
+
+
+--(4). The customer success team is building a profile card for each customer. 
+-- They need full name, country, gender, marital status, and how many years ago the customer was created — as a single readable report.
+
+select
+	concat(first_name,' ',last_name) AS Full_Name,
+	country,
+	gender,
+	marital_status,
+	DATEDIFF(YEAR,create_date,GETDATE()) AS Created_Year_Ago
+from gold.dim_customers
