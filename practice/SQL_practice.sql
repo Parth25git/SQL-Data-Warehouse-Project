@@ -133,6 +133,7 @@ from gold.dim_products;
 
 --(4). The customer success team is building a profile card for each customer. 
 -- They need full name, country, gender, marital status, and how many years ago the customer was created — as a single readable report.
+-- DateAdd concept is IMP here.
 
 select
 	concat(first_name,' ',last_name) AS Full_Name,
@@ -141,3 +142,39 @@ select
 	marital_status,
 	DATEDIFF(YEAR,create_date,GETDATE()) AS Created_Year_Ago
 from gold.dim_customers
+
+
+--If:
+--create_date = '2024-12-31'
+--today       = '2025-01-01'
+--then DATEDIFF(YEAR, create_date, GETDATE()) returns 1
+--even though only 1 day has passed.
+
+		--Solution :- 
+
+--SELECT
+--    customer_number,
+--    create_date,
+--    DATEDIFF(YEAR, create_date, GETDATE())
+--    -
+--    CASE
+--        WHEN DATEADD(
+--                YEAR,
+--                DATEDIFF(YEAR, create_date, GETDATE()),
+--                create_date
+--             ) > GETDATE()
+--        THEN 1
+--        ELSE 0
+--    END AS Years_As_Customer
+--FROM gold.dim_customers;
+
+
+
+--(5) The customer team wants to identify the newest customers who joined the business.
+-- Pull customer names and their creation date, ordered to show the most recently added first.
+
+SELECT
+    CONCAT(first_name, ' ', last_name) AS Customer_Name,
+    create_date
+FROM gold.dim_customers
+ORDER BY create_date DESC;
